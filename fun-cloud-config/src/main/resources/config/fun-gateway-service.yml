@@ -1,0 +1,16 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){blue} %clr([%p]){highlight} %clr(%logger{0}){cyan}: %clr(%m%n%wEx){yellow}"
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+  instance:
+    hostName: fun-gateway-service-12345678

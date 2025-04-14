@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: fun-gateway-service
+  config:
+    import: configserver:http://localhost:8888
+  port: 8082

@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: fun-eureka-server
+  config:
+    import: configserver:http://localhost:8888
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+
+server:
+  port: 8761

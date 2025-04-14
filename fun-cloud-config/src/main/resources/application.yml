@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: fun-cloud-config
+  profiles:
+    active: native
+  output:
+    ansi:
+      enabled: always
+
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:config/
+        bootstrap: false
+
+server:
+  port: 8888
+
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){blue} %clr([%p]){highlight} %clr(%logger{0}){cyan}: %clr(%m%n%wEx){yellow}"
