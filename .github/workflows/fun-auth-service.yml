@@ -1,4 +1,4 @@
-name: Gateway Service Test
+name: Auth Service Test
 
 on:
   workflow_dispatch:
@@ -11,4 +11,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Print Hello World
-        run: echo "Hello from fun-gateway-service!"
+        run: echo "Hello from fun-auth-service!"
