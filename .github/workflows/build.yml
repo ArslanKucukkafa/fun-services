@@ -24,7 +24,10 @@ jobs:
       - name: Detect changed folders
         id: check
         run: |
-          # "before" commit'i geçerli değilse, tüm servisleri işaretle
+          # Eski commit'i fetch et (force push durumları için)
+          git fetch --no-tags --prune --depth=1 origin ${{ github.event.before }}
+      
+          # "before" commit'i geçersizse, tüm servisleri işaretle
           if [[ "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]]; then
             echo "config=1" >> $GITHUB_OUTPUT
             echo "gateway=1" >> $GITHUB_OUTPUT
@@ -32,13 +35,13 @@ jobs:
             echo "auth=1" >> $GITHUB_OUTPUT
             exit 0
           fi
-
-          # Değişiklikleri dinamik SHA'lar ile kontrol et
-          CONFIG_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-config-service/')
-          GATEWAY_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-gateway-service/')
-          EUREKA_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-eureka-service/')
-          AUTH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-auth-service/')
-
+      
+          # Değişiklikleri kontrol et (hata bastırma ile)
+          CONFIG_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-config-service/' || true)
+          GATEWAY_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-gateway-service/' || true)
+          EUREKA_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-eureka-service/' || true)
+          AUTH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-auth-service/' || true)
+      
           echo "config=$CONFIG_CHANGED" >> $GITHUB_OUTPUT
           echo "gateway=$GATEWAY_CHANGED" >> $GITHUB_OUTPUT
           echo "eureka=$EUREKA_CHANGED" >> $GITHUB_OUTPUT
