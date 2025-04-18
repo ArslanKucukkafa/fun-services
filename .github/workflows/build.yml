@@ -2,11 +2,9 @@ name: Build Microservices
 
 on:
   push:
-    branches:
-      - "**"
+    branches: ["**"]
   pull_request:
-    branches:
-      - "**"
+    branches: ["**"]
 
 jobs:
   detect-changes:
@@ -19,18 +17,16 @@ jobs:
       auth: ${{ steps.check.outputs.auth }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Detect changed folders
         id: check
         run: |
-          git fetch origin ${{ github.event.before }}
-
           CONFIG_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-config-service/')
           GATEWAY_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-gateway-service/')
           EUREKA_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-eureka-service/')
           AUTH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-auth-service/')
-          
+
           echo "config=$CONFIG_CHANGED" >> $GITHUB_OUTPUT
           echo "gateway=$GATEWAY_CHANGED" >> $GITHUB_OUTPUT
           echo "eureka=$EUREKA_CHANGED" >> $GITHUB_OUTPUT
@@ -39,19 +35,19 @@ jobs:
   call-gateway-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.gateway != '0'
-    uses: ./.github/workflows/fun-gateway-service.yml@git_actions
+    uses: ./.github/workflows/fun-gateway-service.yml
 
   call-eureka-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.eureka != '0'
-    uses: ./.github/workflows/fun-eureka-service.yml@git_actions
+    uses: ./.github/workflows/fun-eureka-service.yml
 
   call-config-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.config != '0'
-    uses: ./.github/workflows/fun-config-service.yml@git_actions
+    uses: ./.github/workflows/fun-config-service.yml
 
   call-auth-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.auth != '0'
-    uses: ./.github/workflows/fun-auth-service.yml@git_actions
+    uses: ./.github/workflows/fun-auth-service.yml
