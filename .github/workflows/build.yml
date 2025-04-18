@@ -24,6 +24,9 @@ jobs:
       - name: Detect changed folders
         id: check
         run: |
+          git fetch origin ${{ github.event.before }}  # Eski commit'i indir
+          
+          
           if ! git rev-parse --verify ${{ github.event.before }} >/dev/null 2>&1; then
             echo "Eski commit bulunamadı, tüm dosyaları değişmiş say."
             CONFIG_CHANGED=1
