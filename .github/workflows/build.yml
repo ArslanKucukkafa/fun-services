@@ -26,13 +26,10 @@ jobs:
         run: |
           git fetch origin ${{ github.event.before }}
 
-          echo "BEFORE: ${{ github.event.before }}"
-          echo "AFTER: ${{ github.sha }}"
-
-          CONFIG_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^fun-config-service/' | wc -l)
-          GATEWAY_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^fun-gateway-service/' | wc -l)
-          EUREKA_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^fun-eureka-service/' | wc -l)
-          AUTH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^fun-auth-service/' | wc -l)
+          CONFIG_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-config-service/')
+          GATEWAY_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-gateway-service/')
+          EUREKA_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-eureka-service/')
+          AUTH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-auth-service/')
           
           echo "config=$CONFIG_CHANGED" >> $GITHUB_OUTPUT
           echo "gateway=$GATEWAY_CHANGED" >> $GITHUB_OUTPUT
@@ -42,19 +39,19 @@ jobs:
   call-gateway-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.gateway != '0'
-    uses: /ArslanKucukkafa/fun-services/.github/workflows/fun-gateway-service.yml@git_actions
+    uses: ./.github/workflows/fun-gateway-service.yml@git_actions
 
   call-eureka-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.eureka != '0'
-    uses: /ArslanKucukkafa/fun-services/.github/workflows/fun-eureka-service.yml@git_actions
+    uses: ./.github/workflows/fun-eureka-service.yml@git_actions
 
   call-config-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.config != '0'
-    uses: /ArslanKucukkafa/fun-services/.github/workflows/fun-config-service.yml@git_actions
+    uses: ./.github/workflows/fun-config-service.yml@git_actions
 
   call-auth-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.auth != '0'
-    uses: /ArslanKucukkafa/fun-services/.github/workflows/fun-auth-service.yml@git_actions
+    uses: ./.github/workflows/fun-auth-service.yml@git_actions
