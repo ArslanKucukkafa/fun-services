@@ -24,22 +24,21 @@ jobs:
       - name: Detect changed folders
         id: check
         run: |
-          git fetch origin ${{ github.event.before }}  # Eski commit'i indir
-          
-          
-          if ! git rev-parse --verify ${{ github.event.before }} >/dev/null 2>&1; then
-            echo "Eski commit bulunamadı, tüm dosyaları değişmiş say."
-            CONFIG_CHANGED=1
-            GATEWAY_CHANGED=1
-            EUREKA_CHANGED=1
-            AUTH_CHANGED=1
-          else
-            CONFIG_CHANGED=$(git diff --name-only 7de859cb4867245a139c26e898b3baff3de8e42a 4b0139714daf3579bb29e0613a1a30aa9a928e5a | grep -c '^fun-config-service/')
-            GATEWAY_CHANGED=$(git diff --name-only 7de859cb4867245a139c26e898b3baff3de8e42a 4b0139714daf3579bb29e0613a1a30aa9a928e5a | grep -c '^fun-gateway-service/')
-            EUREKA_CHANGED=$(git diff --name-only 7de859cb4867245a139c26e898b3baff3de8e42a 4b0139714daf3579bb29e0613a1a30aa9a928e5a | grep -c '^fun-eureka-service/')
-            AUTH_CHANGED=$(git diff --name-only 7de859cb4867245a139c26e898b3baff3de8e42a 4b0139714daf3579bb29e0613a1a30aa9a928e5a | grep -c '^fun-auth-service/')
+          # "before" commit'i geçerli değilse, tüm servisleri işaretle
+          if [[ "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]]; then
+            echo "config=1" >> $GITHUB_OUTPUT
+            echo "gateway=1" >> $GITHUB_OUTPUT
+            echo "eureka=1" >> $GITHUB_OUTPUT
+            echo "auth=1" >> $GITHUB_OUTPUT
+            exit 0
           fi
-  
+
+          # Değişiklikleri dinamik SHA'lar ile kontrol et
+          CONFIG_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-config-service/')
+          GATEWAY_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-gateway-service/')
+          EUREKA_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-eureka-service/')
+          AUTH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -c '^fun-auth-service/')
+
           echo "config=$CONFIG_CHANGED" >> $GITHUB_OUTPUT
           echo "gateway=$GATEWAY_CHANGED" >> $GITHUB_OUTPUT
           echo "eureka=$EUREKA_CHANGED" >> $GITHUB_OUTPUT
