@@ -15,5 +15,6 @@ public class MagicLinkOneTimeTokenGenerationSuccessHandler implements OneTimeTok
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, OneTimeToken oneTimeToken) throws IOException, ServletException {
 
+
     }
 }
