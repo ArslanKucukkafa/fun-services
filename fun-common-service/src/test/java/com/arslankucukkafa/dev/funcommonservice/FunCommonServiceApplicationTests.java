@@ -1,10 +1,10 @@
-package com.arslankucukkafa.dev.fun.eureka.service;
+package com.arslankucukkafa.dev.funcommonservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EurekaServerApplicationTests {
+class FunCommonServiceApplicationTests {
 
     @Test
     void contextLoads() {
