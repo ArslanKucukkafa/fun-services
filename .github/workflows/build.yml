@@ -42,19 +42,19 @@ jobs:
   call-gateway-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.gateway != '0'
-    uses: ./fun-gateway-service.yml
+    uses: arslankucukkafa/fun-microservices/.github/workflows/fun-gateway-service.yml@git_actions
 
   call-eureka-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.eureka != '0'
-    uses: ./fun-eureka-service.yml
+    uses: arslankucukkafa/fun-microservices/.github/workflows/fun-eureka-service.yml@git_actions
 
   call-config-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.config != '0'
-    uses: ./fun-config-service.yml
+    uses: arslankucukkafa/fun-microservices/.github/workflows/fun-config-service.yml@git_actions
 
   call-auth-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.auth != '0'
-    uses: ./fun-auth-service.yml
+    uses: arslankucukkafa/fun-microservices/.github/workflows/fun-auth-service.yml@git_actions
