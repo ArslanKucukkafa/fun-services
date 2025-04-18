@@ -16,6 +16,7 @@ jobs:
       config: ${{ steps.check.outputs.config }}
       gateway: ${{ steps.check.outputs.gateway }}
       eureka: ${{ steps.check.outputs.eureka }}
+      auth: ${{ steps.check.outputs.auth }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,44 +26,35 @@ jobs:
         run: |
           git fetch origin ${{ github.event.before }}
 
+          echo "BEFORE: ${{ github.event.before }}"
+          echo "AFTER: ${{ github.sha }}"
+
           CONFIG_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^fun-config-service/' | wc -l)
           GATEWAY_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^fun-gateway-service/' | wc -l)
           EUREKA_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^fun-eureka-service/' | wc -l)
-
+          AUTH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^fun-auth-service/' | wc -l)
+          
           echo "config=$CONFIG_CHANGED" >> $GITHUB_OUTPUT
           echo "gateway=$GATEWAY_CHANGED" >> $GITHUB_OUTPUT
           echo "eureka=$EUREKA_CHANGED" >> $GITHUB_OUTPUT
+          echo "auth=$AUTH_CHANGED" >> $GITHUB_OUTPUT
 
-  fun-config-service:
-    name: Build Config Service
-    needs: detect-changes
-    if: needs.detect-changes.outputs.config != '0'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Build Config Service
-        run: echo "Running build for fun-config-service"
-        # buraya gerçek build adımlarını ekleyebilirsin (mvn clean install vs.)
-
-  fun-gateway-service:
-    name: Build Gateway Service
+  call-gateway-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.gateway != '0'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Build Gateway Service
-        run: echo "Running build for fun-gateway-service"
+    uses: ./fun-gateway-service.yml
 
-  fun-eureka-service:
-    name: Build Eureka Service
+  call-eureka-service:
     needs: detect-changes
     if: needs.detect-changes.outputs.eureka != '0'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Build Eureka Service
-        run: echo "Running build for fun-eureka-service"
+    uses: ./fun-eureka-service.yml
+
+  call-config-service:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.config != '0'
+    uses: ./fun-config-service.yml
+
+  call-auth-service:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.auth != '0'
+    uses: ./fun-auth-service.yml

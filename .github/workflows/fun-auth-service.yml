@@ -1,14 +1,15 @@
-name: Auth Service Test
+# .github/workflows/fun-auth-service.yml
+name: Auth Service Build
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
-  hello-world:
+  build-auth-service:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Print Hello World
-        run: echo "Hello from fun-auth-service!"
+      - name: Build Auth Service
+        run: echo "Running build for fun-auth-service"

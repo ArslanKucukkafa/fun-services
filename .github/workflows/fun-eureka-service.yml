@@ -1,14 +1,14 @@
-name: Eureka Service Test
+name: Eureka Service Build
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
-  hello-world:
+  build-eureka-service:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Print Hello World
-        run: echo "Hello from fun-eureka-service!"
+      - name: Build Eureka Service
+        run: echo "Running build for fun-eureka-service"
