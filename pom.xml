@@ -17,6 +17,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>fun-common-service</module>
         <module>fun-config-service</module>
         <module>fun-eureka-service</module>
         <module>fun-gateway-service</module>
