@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: fun-common-service
+  cloud:
+    aws:
+      credentials:
+        access-key:
+        secret-key:
+      sns:
+        region: eu-north-1
+
+

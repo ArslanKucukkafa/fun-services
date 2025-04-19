@@ -1,0 +1,14 @@
+name: Config Service Build
+
+on:
+  workflow_call:
+
+jobs:
+  build-config-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build Config Service
+        run: echo "Running build for fun-config-service"

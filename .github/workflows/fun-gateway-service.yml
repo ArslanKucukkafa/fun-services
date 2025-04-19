@@ -1,0 +1,14 @@
+name: Gateway Service Build Test
+
+on:
+  workflow_call:
+
+jobs:
+  build-gateway-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build Gateway Service
+        run: echo "Running build for fun-gateway-service"

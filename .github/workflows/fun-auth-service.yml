@@ -1,0 +1,15 @@
+# .github/workflows/fun-auth-service.yml
+name: Auth Service Build
+
+on:
+  workflow_call:
+
+jobs:
+  build-auth-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build Auth Service
+        run: echo "Running build for fun-auth-service"

@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    aws:
+      credentials:
+        access-key: AKIA2QVTHBNNCIC4CW5F
+        secret-key: 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
+      sns:
+        region: eu-north-1
+
+
